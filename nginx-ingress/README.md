@@ -1,0 +1,7 @@
+1. $ `snap install microk8s --classic --channel=1.19`
+1. $ `microk8s.start`
+1. $ `microk8s.enable`
+1. $ `microk8s enable ingress`
+1. $ `microk8s.kubectl apply -f nginx-app.yml`
+1. $ `microk8s.kubectl apply -f nginx-ingress.yml`
+1. Now you can test ingress
