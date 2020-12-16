@@ -33,3 +33,20 @@ spec:
     - port: 80  # service port
       protocol: TCP
       targetPort: 80  # container port
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    #ingress.kubernetes.io/rewrite-target: /
+#  namespace: kube-system
+spec:
+  rules:
+    - host: nginx-ingress.airlan.cv.ua
+      http:
+        paths:
+          - backend:
+              serviceName: nginx-service
+              servicePort: 80
