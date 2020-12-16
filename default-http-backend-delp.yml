@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: kube-system
+  name: default-responce-app-deployment
+  labels:
+    app: default-responce-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: default-responce-app
+  template:
+    metadata:
+      labels:
+        app: default-responce-app
+    spec:
+      containers:
+        - name: default-responce-app
+          image: nginx:1.16
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: kube-system
+  name: default-http-backend # a random name
+spec:
+  selector:  # to connect to Pod through label
+    app: default-responce-app
+  ports:
+    - port: 80  # service port
+      protocol: TCP
+      targetPort: 80  # container port
