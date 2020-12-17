@@ -40,9 +40,14 @@ metadata:
   name: nginx-ingress
   annotations:
     kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
     #ingress.kubernetes.io/rewrite-target: /
 #  namespace: kube-system
 spec:
+  tls:
+    - hosts:
+        - nginx-ingress.airlan.cv.ua
+      secretName: default-tls-secret
   rules:
     - host: nginx-ingress.airlan.cv.ua
       http:
