@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ghost
+  labels:
+    app: ghost
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ghost
+  template:
+    metadata:
+      labels:
+        app: ghost
+    spec:
+      containers:
+        - name: ghost
+          image: ghost:3-alpine
+          ports:
+            - containerPort: 2368
+          env:
+            - name: database__connection__user
+              valueFrom:
+                secretKeyRef:
+                  name: ghost-secret
+                  key: database__connection__user
+            - name: database__connection__password
+              valueFrom:
+                secretKeyRef:
+                  name: ghost-secret
+                  key: database__connection__password
+            - name: database__client
+              valueFrom:
+                configMapKeyRef:
+                  key: database__client
+                  name: ghost-configmap
+            - name: database__connection__host
+              valueFrom:
+                configMapKeyRef:
+                  key: database__connection__host
+                  name: ghost-configmap
+            - name: database__connection__database
+              valueFrom:
+                configMapKeyRef:
+                  key: database__connection__database
+                  name: ghost-configmap
+            - name: url
+              valueFrom:
+                configMapKeyRef:
+                  key: url
+                  name: ghost-configmap
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ghost-service
+spec:
+  selector:
+    app: ghost
+  ports:
+    - port: 80
+      targetPort: 2368
+      protocol: TCP
+      # 4fa205e16ca0cf0b989faaa0fe
+      # 5fdcbc758ea9e70001960005:c85b6fd4d32a1b79b2d9db0a9d2e8fdd8ecf44f51f4a1687c6be3f9511dd0e03

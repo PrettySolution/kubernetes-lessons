@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ghost-mysql-deployment
+  labels:
+    app: ghost-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ghost-mysql
+  template:
+    metadata:
+      labels:
+        app: ghost-mysql
+    spec:
+      containers:
+        - name: ghost-mysql
+          image: mysql
+          ports:
+            - containerPort: 27017
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ghost-secret
+                  key: MYSQL_ROOT_PASSWORD
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: ghost-configmap
+                  key: ghost-configmap
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: ghost-secret
+                  key: MYSQL_USER
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ghost-mysql-service # a random name
+spec:
+  selector:  # to connect to Pod through label
+    app: ghost-mysql
+  ports:
+    - port: 27017  # service port
+      protocol: TCP
+      targetPort: 27017  # container port

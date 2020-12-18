@@ -1,0 +1,40 @@
+replicaCount: 1
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  name:
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  annotations:
+     kubernetes.io/ingress.class: nginx
+     cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: example-app.airlan.cv.ua
+      paths:
+        - ""
+  tls:
+    - secretName: chart-example-tls
+      hosts:
+        - example-app.airlan.cv.ua
+
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}
