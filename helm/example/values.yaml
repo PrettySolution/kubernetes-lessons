@@ -1,0 +1,16 @@
+deployment:
+  name: "nginx-deployment"
+  app: "nginx"
+  image: "nginx"
+  tag: "latest"
+  containerPort: "80"
+
+
+service:
+  name: "nginx-service2"
+  port: &servicePort "80"
+
+ingress:
+  name: "nginx-ingress"
+  url: "nginx.airlan.cv.ua"
+  servicePort: *servicePort
